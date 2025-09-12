@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const http = require('http');
 const {checkforAuthentication} =require('./middleware/auth')
 const { Server } = require("socket.io");
-const port=process.env.PORT || 5000;
+
 //create express app and http server
 const app=express();
 const server=http.createServer(app);
@@ -63,4 +63,10 @@ app.get("/status", checkforAuthentication, (req, res) => {
 app.use("/",userRoute);
 app.use("/message",messageRoute);
 
+if(process.env.NODE_ENV!=="production"){
+const port=process.env.PORT || 5000;
 server.listen(port,()=>console.log(`Server running on port ${port}`));
+}
+
+//export server for vercel
+module.exports=server;
