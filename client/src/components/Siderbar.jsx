@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import assets from "../assets/assets.js";
 import { useNavigate } from "react-router-dom";
 import { Authcontext } from "../../context/Authcontext";
-import { ChatContext } from "../../context/Chatcontext";
+import { ChatContext } from "../../context/ChatContext";
 const Siderbar = () => {
   const {
     getUsers,
