@@ -4,7 +4,7 @@ import Homepage from './pages/homepage.jsx'
 import Loginpage from './pages/Loginpage.jsx'
 import Profile from './pages/Profile.jsx'
 import {Toaster} from 'react-hot-toast'
-import {Authcontext} from '../context/authcontext.jsx'
+import {Authcontext} from '../context/Authcontext.jsx'
 const App = () => {
   const {authUser}=useContext(Authcontext);
   const navigate = useNavigate();
