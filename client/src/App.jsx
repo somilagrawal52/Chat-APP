@@ -1,6 +1,6 @@
 import React,{useContext,useEffect} from 'react'
 import { Routes,Route,Navigate,useNavigate } from 'react-router-dom'
-import Homepage from './pages/homepage.jsx'
+import Homepage from './pages/Homepage.jsx'
 import Loginpage from './pages/Loginpage.jsx'
 import Profile from './pages/Profile.jsx'
 import {Toaster} from 'react-hot-toast'
