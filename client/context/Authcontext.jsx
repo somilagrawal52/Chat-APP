@@ -5,6 +5,7 @@ import  toast  from 'react-hot-toast';
 
 const backendURL=import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL=backendURL;
+axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
 
 const Authcontext=createContext();
 

@@ -9,11 +9,25 @@ const Chatcontainer = () => {
   const { messages, selecteduser, setSelecteduser, sendMessages, getMessages } =
     useContext(ChatContext);
 
-  const { authUser, onlineusers } = useContext(Authcontext);
+  const { authUser, onlineusers,axios } = useContext(Authcontext);
 
   const scrollEnd = useRef();
 
   const [input, setInput] = useState("");
+  const [smartReplies, setSmartReplies] = useState([]);
+
+  //function to fetch smart replies
+  const fetchSmartReplies = async (message) => {
+  try {
+    const { data } = await axios.post(`/message/smart-replies`, { msg:message });
+    if (data.success) {
+      // Instead of appending as a message, treat Gemini reply as suggestions
+      setSmartReplies(data.replies); // assuming backend sends suggestions separated by "|"
+    }
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
 
   //handle sending a message
   const handlesendMessages = async (e) => {
@@ -44,6 +58,17 @@ const Chatcontainer = () => {
       getMessages(selecteduser._id);
     }
   }, [selecteduser]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.sender !== authUser._id) {
+        fetchSmartReplies(lastMsg.text);
+      } else {
+        setSmartReplies([]); // clear replies when you send
+      }
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (scrollEnd.current && messages) {
@@ -133,6 +158,25 @@ const Chatcontainer = () => {
 
         <div ref={scrollEnd}></div>
       </div>
+
+     {/* smart replies part */}
+{smartReplies.length > 0 && (
+  <div className="absolute bottom-16 left-0 right-0 px-3 pb-2 flex gap-2 overflow-x-auto no-scrollbar">
+    {smartReplies.map((reply, idx) => (
+      <button
+        key={idx}
+        onClick={() => {
+          sendMessages({ text: reply });
+          setSmartReplies([]); // clear after sending
+        }}
+        className="px-4 py-1 rounded-full bg-violet-600 text-white text-sm hover:bg-violet-700 transition whitespace-nowrap"
+      >
+        {reply}
+      </button>
+    ))}
+  </div>
+)}
+
       {/* bottom area */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center gap-3 w-full p-3 backdrop-blur-lg">
         <div className="flex items-center flex-1 bg-white/10 backdrop-blur-lg rounded-full px-3 py-2">
